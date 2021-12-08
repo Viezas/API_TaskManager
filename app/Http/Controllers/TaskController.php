@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Transformers\TaskTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class TaskController extends Controller
 {
@@ -16,7 +17,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::where('user_id', Auth::user()->id)->get();
+        $tasks = Task::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
         
         return response()->json(fractal()
                 ->collection($tasks)
@@ -51,9 +52,19 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
-        //
+        $task = Task::where('id', $id)->where('user_id', Auth::user()->id)->get();
+        if(is_null($task)){
+            return response()->json([
+                'error' => Config::get('error.task')
+            ], 404);
+        }
+        
+        return response()->json(fractal()
+                ->collection($task)
+                ->transformWith(new TaskTransformer)
+                ->toArray(), 200);
     }
 
     /**
