@@ -23,7 +23,6 @@ Route::prefix('auth')->group(function () {
 
 //TASK
 Route::prefix('tasks')->middleware('auth:sanctum')->group(function () {
-    Route::get('/', [TaskController::class, 'index'])->name('index');
     Route::get('/{id}', [TaskController::class, 'show'])->name('show');
     Route::put('/{id}', [TaskController::class, 'update'])->name('update');
     Route::delete('/{id}', [TaskController::class, 'destroy'])->name('delete');

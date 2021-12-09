@@ -16,10 +16,19 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
-        
+        if($request->completed) {
+            if($request->completed !== "true" && $request->completed !== "false" && $request->completed !== "1" && $request->completed !== "0") {
+                return response()->json([
+                    'error' => Config::get('error.filter')
+                ], 400);
+            }
+            $tasks = Task::where('completed', $request->completed)->where('user_id', Auth::user()->id)->get();
+        } else {
+            $tasks = Task::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+        }
+
         return response()->json(fractal()
                 ->collection($tasks)
                 ->transformWith(new TaskTransformer)

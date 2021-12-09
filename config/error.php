@@ -10,4 +10,5 @@ function error_template(string $message, int $status_code) {
 return [
   'login' => error_template('Identifians inconnus', 401),
   'task' =>  error_template('Tâche inconnu', 404),
+  'filter' => error_template('Filtre inconnu', 400)
 ];
