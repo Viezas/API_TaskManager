@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Artisan;
+use Illuminate\Support\Facades\Artisan as FacadesArtisan;
 
 class setup extends Command
 {
@@ -39,6 +41,12 @@ class setup extends Command
      */
     public function handle()
     {
+        $this->line("<fg=magenta>Clean up database !\n");
+        $main = $this->output->createProgressBar(100);
+        FacadesArtisan::call('migrate:fresh');
+        $main->finish();
+        $this->line("<fg=green>\nDone !\n");
+
         $this->line("<fg=magenta>Generating users !\n");
         $main = $this->output->createProgressBar(100);
         User::factory($this->option('users'))->create();
