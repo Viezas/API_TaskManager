@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Task\CreateRequest as TaskCreateRequest;
+use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use App\Transformers\TaskTransformer;
 use Illuminate\Http\Request;
@@ -42,16 +42,16 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TaskCreateRequest $request)
+    public function store(TaskRequest $request)
     {
         $validated = $request->validated();
 
         $validated['user_id'] = Auth::user()->id;
         $task = Task::create($validated);
 
-        response()->json([
+        return response()->json([
             'message' => 'Tâche crée'
-        ],201);
+        ], 201);
     }
 
     /**
@@ -93,9 +93,21 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TaskRequest $request, int $id)
     {
-        //
+        $validated = $request->validated();
+
+        $task = Task::where('id', $id)->where('user_id', Auth::user()->id)->get();
+        if(count($task) == 0){
+            return response()->json([
+                'error' => Config::get('error.task')
+            ], 404);
+        }
+        
+        Task::where('id', $id)->where('user_id', Auth::user()->id)->update($validated);
+        return response()->json([
+            'message' => 'Tâche mise à jour'
+        ], 200);
     }
 
     /**
