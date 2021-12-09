@@ -116,8 +116,15 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        //
+        $task = Task::where('id', $id)->where('user_id', Auth::user()->id)->get();
+        if(count($task) == 0){
+            return response()->json([
+                'error' => Config::get('error.task')
+            ], 404);
+        }
+        Task::where('id', $id)->delete();
+        return response()->noContent();
     }
 }
