@@ -1,14 +1,16 @@
 <?php
 
-function error_template(string $message, int $status_code) {
-  return [
-    'message' => $message,
-    'status_code' => $status_code
-  ];
-}
-
 return [
-  'login' => error_template('Identifians inconnus', 401),
-  'task' =>  error_template('Tâche inconnu', 404),
-  'filter' => error_template('Filtre inconnu', 400)
+  'login' => [
+    'message' => 'Identifians inconnus',
+    'status_code' => 401
+  ],
+  'task' =>[
+    'message' => 'Tâche inconnu',
+    'status_code' => 404
+  ],
+  'filter' =>[
+    'message' => 'Filtre inconnu',
+    'status_code' => 400
+  ]
 ];
