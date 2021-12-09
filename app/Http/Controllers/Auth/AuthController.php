@@ -18,9 +18,9 @@ class AuthController extends Controller
 
         $user = User::where('email', $validated['email'])->first();
         if(Hash::check($validated['password'], $user['password'])) {
-            $auth_token = $user->createToken(Str::random(50));
+            $auth_token = $user->createToken(Str::random(50))->plainTextToken;
             return response()->json([
-                "token" => $auth_token->plainTextToken
+                "token" => $auth_token
             ]);
         }
 
@@ -34,9 +34,9 @@ class AuthController extends Controller
         $validated = $request->validated();
         $validated['password'] = Hash::make($validated['password']);
         $user = User::create($validated);
-        $auth_token = $user->createToken(Str::random(50));
+        $auth_token = $user->createToken(Str::random(50))->plainTextToken;
         return response()->json([
-            "token" => $auth_token->plainTextToken
+            "token" => $auth_token
         ]);
     }
 }
