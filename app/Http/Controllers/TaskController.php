@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Task\CreateRequest as TaskCreateRequest;
 use App\Models\Task;
 use App\Transformers\TaskTransformer;
 use Illuminate\Http\Request;
@@ -41,9 +42,16 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TaskCreateRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $validated['user_id'] = Auth::user()->id;
+        $task = Task::create($validated);
+
+        response()->json([
+            'message' => 'Tâche crée'
+        ],201);
     }
 
     /**
@@ -55,7 +63,7 @@ class TaskController extends Controller
     public function show(int $id)
     {
         $task = Task::where('id', $id)->where('user_id', Auth::user()->id)->get();
-        if(is_null($task)){
+        if(count($task) == 0){
             return response()->json([
                 'error' => Config::get('error.task')
             ], 404);

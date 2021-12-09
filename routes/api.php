@@ -26,4 +26,5 @@ Route::prefix('auth')->group(function () {
 Route::prefix('tasks')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [TaskController::class, 'index'])->name('index');
     Route::get('/{id}', [TaskController::class, 'show'])->name('show');
+    Route::resource('/store', TaskController::class);
 });
