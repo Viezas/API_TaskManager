@@ -10,7 +10,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 
 class LoginTest extends TestCase
 {
-    public function test_successful_login()
+    public function test_login()
     {
         $user = User::where('id', 1)->first();
         $response = $this->postJson('/api/auth/login', [

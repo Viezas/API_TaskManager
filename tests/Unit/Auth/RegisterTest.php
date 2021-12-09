@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class RegisterTest extends TestCase
 {
-    public function test_successful_register()
+    public function test_register()
     {
         $user = User::where('email', 'test@gmail.com')->get();
         if(count($user) > 0) {
